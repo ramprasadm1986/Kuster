@@ -32,6 +32,7 @@ export default class Home extends Component {
             
         else {
             AsyncStorage.setItem('attendance', this.state.attendance);
+            AsyncStorage.setItem('lastdate', new Date()); 
             this.props.navigation.navigate('Opencall');
         }
     };

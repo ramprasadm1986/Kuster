@@ -22,6 +22,15 @@ export default class Login extends Component {
             passwordi: true
         };
     }
+    datesAreOnSameDay = (first,second) =>{
+        
+        if (first.getFullYear() === second.getFullYear() && first.getMonth() === second.getMonth() && first.getDate() === second.getDate())
+        
+            return true;
+        else 
+            return false;
+        
+    }
     authenticate = () => {
         if (this.state.email == '') {
             alert('Please enter user name !');
@@ -43,6 +52,7 @@ export default class Login extends Component {
                         user.push({ username: email, authorisation: response.authorisation });
                         AsyncStorage.setItem('username', email);
                         AsyncStorage.setItem('authorisation', response.authorisation);
+                        AsyncStorage.setItem('lastdate', new Date()); 
                         this.props.navigation.navigate('Home');
                     } else {
                         this.setState({ loading: false });
@@ -67,7 +77,33 @@ export default class Login extends Component {
         SplashScreen.hide();
         AsyncStorage.getItem("authorisation").then((value) => {
             if (value != null || value != undefined || value == "") {
-                this.props.navigation.navigate('Drawer', { screen: 'TodayCallList' })
+                
+                AsyncStorage.getItem("lastdate").then((value) => {
+                    
+                    if (value != null || value != undefined || value == "") {
+                        
+                        if(this.datesAreOnSameDay(value,new Date())){
+                            
+                            this.props.navigation.navigate('Drawer', { screen: 'TodayCallList' })
+                        }
+                        else{
+                            
+                            this.props.navigation.navigate('Home');
+                        }
+                        
+                    }
+                    else{
+                        
+                        this.props.navigation.navigate('Home');
+                    }
+                    
+                })
+                
+                
+                
+               
+                
+               
             }
         })
     }
